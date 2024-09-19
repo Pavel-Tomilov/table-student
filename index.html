@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Список студентов</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+        <link rel="stylesheet" href="./styles/normalize.css">
+    <link rel="stylesheet" href="./styles/style.css">
+
+
+</head>
+<header>
+    <div class="container text-center"><h1>Панель управления студентами</h1></div>
+</header>
+<body>
+    <div class="container">
+    
+        <button id="addStudentClass" class="btn btn-primary btn-lg btn-block"> Добавить студента</button>
+                
+                <div class="card mb-4">
+                    <div class="card-body form-row">
+                        <div class="form-group col">
+                            <label for="firstName">Фамилия</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" required>
+                        </div>
+        
+                        <div class="form-group col">
+                            <label for="lastName">Имя</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" required>
+                        </div>
+        
+                        <div class="form-group col">
+                            <label for="middleName">Отчество</label>
+                            <input type="text" class="form-control" id="middleName" name="middleName" required>
+                        </div>
+                    </div>
+                    <div class="card-body form-row">
+                        <div class="form-group col">
+                            <label for="birthDate">Дата рождения</label>
+                            <input type="date" class="form-control" id="birthDate" name="birthDate" required min="1900">
+                        </div>
+        
+                        <div class="form-group col">
+                            <label for="startYear">Год начала обучения</label>
+                            <input type="date" class="form-control" id="startYear" name="startYear" required min="2020" max="2024">
+                        </div>
+        
+                        <div class="form-group col">
+                            <label for="faculty">Факультет</label>
+                            <input type="text" class="form-control" id="faculty" name="faculty" required>
+                        </div>
+                    </div>
+                </div>
+    
+        <table class="table table-bordered table-hover" id="studentTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="stroke">ФИО студента</th>
+                    <th class="stroke">Факультет</th>
+                    <th class="stroke">Дата рождения(возраст)</th>
+                    <th class="stroke">Годы обучения(Курс)</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            
+        </table>
+        
+    </div>
+    <script src="./js/main.js"></script>
+</body>
+
+</html>
