@@ -44,62 +44,103 @@ const students = [
         faculty: 'Исторический'
     }
 ];
-
-
 const buttonAddStudent = document.getElementById('addStudentClass');
-buttonAddStudent.addEventListener('click', addStudent);
-
-function addStudent() {
-    const firstName = document.getElementById('firstName').value;
-    const lastName = document.getElementById('lastName').value;
-    const middleName = document.getElementById('middleName').value;
-
-    const birthDate = document.getElementById('birthDate').value;
-
-    const startYear = document.getElementById('startYear').value;
-
-    const faculty = document.getElementById('faculty').value;
+// buttonAddStudent.addEventListener('click', onAddBtn);
+buttonAddStudent.addEventListener('mouseover', onAddBtn);
 
 
-    console.log(firstName, lastName, middleName, startYear, birthDate, faculty);
+// Находим элемент <tbody> в таблице
+const tbody = document.querySelector('#studentTable tbody');
+tbody.classList.add('stroke')
+
+function onAddBtn() {
+    addStudentToTable();
+    clearForm();
 }
 
+function clearForm() {
+    document.getElementById('firstName').value = '';
+    document.getElementById('lastName').value = '';
+    document.getElementById('middleName').value = '';
+    document.getElementById('birthDate').value = '';
+    document.getElementById('startYear').value = '';
+    document.getElementById('faculty').value = '';
+}
+
+function addStudentToTable(firstNameMock, lastNameMock, middleNameMock, birthDateMock, startYearMock, facultyMock) {
+    let firstName;
+    let lastName;
+    let middleName;
+    let birthDate;
+    let startYear;
+    let faculty;
+
+    if (firstNameMock && lastNameMock && middleNameMock && birthDateMock && startYearMock && facultyMock) {
+        //азполняем таблицу из данных которые хранятся в мокдат
+        firstName = firstNameMock;
+        lastName = lastNameMock;
+        middleName = middleNameMock;
+        birthDate = birthDateMock;
+        startYear = startYearMock;
+        faculty = facultyMock;
+    } else {
+        firstName = document.getElementById('firstName').value;
+        lastName = document.getElementById('lastName').value;
+        middleName = document.getElementById('middleName').value;
+        birthDate = document.getElementById('birthDate').value;
+        startYear = document.getElementById('startYear').value;
+        faculty = document.getElementById('faculty').value;
+    }
+
+
+    // Создаем ячейки <td>
+    const nameCell = document.createElement('td');
+    nameCell.textContent = `${lastName} ${firstName} ${middleName}`;
+
+    const facultyCell = document.createElement('td');
+    facultyCell.textContent = faculty;
+
+    const birthDateCell = document.createElement('td');
+    birthDateCell.textContent = birthDate;
+
+    const startYearCell = document.createElement('td');
+    startYearCell.textContent = startYear;
+
+    const row = document.createElement('tr');
+
+    // Добавляем ячейки в строку
+    row.appendChild(nameCell);
+    row.appendChild(facultyCell);
+    row.appendChild(birthDateCell);
+    row.appendChild(startYearCell);
+
+    // Добавляем строку в <tbody>
+    tbody.appendChild(row);
+}
+
+// const validateStudents = (a,b,c,d...)
+//  [{ fullname error}, {faculti error}]
 
 // Функция для добавления студентов в таблицу
-function addStudentsToTable(students) {
-    // Находим элемент <tbody> в таблице
-    const tbody = document.querySelector('#studentTable tbody');
-    tbody.classList.add('stroke')
-
+function initialTableDataMock(students) {
     // Очищаем таблицу перед добавлением новых данных (опционально)
     tbody.innerHTML = '';
-
     // Создаем строки таблицы для каждого студента
-    students.forEach(student => {
-        // Создаем элемент <tr> для строки
-        const row = document.createElement('tr');
+    students.forEach((student) => {
+        const {
+            lastName,
+            firstName,
+            middleName,
+            faculty,
+            birthDate,
+            startYear,
+        } = student;
 
-        // Создаем ячейки <td> 
-        const nameCell = document.createElement('td');
-        nameCell.textContent = `${student.lastName} ${student.firstName} ${student.middleName}`;
-        const facultyCell = document.createElement('td');
-        facultyCell.textContent = student.faculty;
-        const birthDateCell = document.createElement('td');
-        birthDateCell.textContent = student.birthDate;
-        const startYearCell = document.createElement('td');
-        startYearCell.textContent = student.startYear;
-
-        // Добавляем ячейки в строку
-        row.appendChild(nameCell);
-        row.appendChild(facultyCell);
-        row.appendChild(birthDateCell);
-        row.appendChild(startYearCell);
-
-        // Добавляем строку в <tbody>
-        tbody.appendChild(row);
+        addStudentToTable(firstName, lastName, middleName, birthDate, startYear, faculty)
     });
 }
 
-addStudentsToTable(students);
+
+initialTableDataMock(students);
 
 
