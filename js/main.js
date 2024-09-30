@@ -3,8 +3,8 @@ const students = [
         firstName: 'Олег',
         lastName: 'Филимонов',
         middleName: 'Александрович',
-        birthDate: 1996,
-        startYear: 2000,
+        Date: '31.12.1985',
+        startYear: 2020,
         faculty: 'Исторический'
     },
 
@@ -12,8 +12,8 @@ const students = [
         firstName: 'Ирина',
         lastName: 'Балуевская',
         middleName: 'Алексеевна',
-        birthDate: 1985,
-        startYear: 2001,
+        Date: '05.111987',
+        startYear: 2021,
         faculty: 'Филологический'
     },
 
@@ -21,8 +21,8 @@ const students = [
         firstName: 'Иван',
         lastName: 'Туваев',
         middleName: 'Николаевич',
-        birthDate: 1990,
-        startYear: 2002,
+        Date: '23.09.1990',
+        startYear: 2022,
         faculty: 'Энергетический'
     },
 
@@ -30,8 +30,8 @@ const students = [
         firstName: 'Дмитрий',
         lastName: 'Шин',
         middleName: 'Валерьевич',
-        birthDate: 1987,
-        startYear: 2000,
+        Date: '22.08.1987',
+        startYear: 2020,
         faculty: 'Математический'
     },
 
@@ -39,19 +39,14 @@ const students = [
         firstName: 'Евгений',
         lastName: 'Козлов',
         middleName: 'Петрович',
-        birthDate: 1998,
-        startYear: 2003,
+        Date: '30.07.1998',
+        startYear: 2023,
         faculty: 'Исторический'
     }
 ];
 const buttonAddStudent = document.getElementById('addStudentClass');
 // buttonAddStudent.addEventListener('click', onAddBtn);
-buttonAddStudent.addEventListener('mouseover', onAddBtn);
-
-
-// Находим элемент <tbody> в таблице
-const tbody = document.querySelector('#studentTable tbody');
-tbody.classList.add('stroke')
+buttonAddStudent.addEventListener('click', onAddBtn);
 
 function onAddBtn() {
     addStudentToTable();
@@ -67,45 +62,51 @@ function clearForm() {
     document.getElementById('faculty').value = '';
 }
 
-function addStudentToTable(firstNameMock, lastNameMock, middleNameMock, birthDateMock, startYearMock, facultyMock) {
-    let firstName;
-    let lastName;
-    let middleName;
-    let birthDate;
-    let startYear;
-    let faculty;
+// Функция, которая считает возраст
+function calculateAge(birthDate) {
+    const currentDate = new Date();
+    const birth = new Date(birthDate);
+    let age = currentDate.getFullYear() - birth.getFullYear();
+    const monthDiff = currentDate.getMonth() - birth.getMonth();
+    const dayDiff = currentDate.getDate() - birth.getDate();
 
-    if (firstNameMock && lastNameMock && middleNameMock && birthDateMock && startYearMock && facultyMock) {
-        //азполняем таблицу из данных которые хранятся в мокдат
-        firstName = firstNameMock;
-        lastName = lastNameMock;
-        middleName = middleNameMock;
-        birthDate = birthDateMock;
-        startYear = startYearMock;
-        faculty = facultyMock;
-    } else {
-        firstName = document.getElementById('firstName').value;
-        lastName = document.getElementById('lastName').value;
-        middleName = document.getElementById('middleName').value;
-        birthDate = document.getElementById('birthDate').value;
-        startYear = document.getElementById('startYear').value;
-        faculty = document.getElementById('faculty').value;
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
     }
 
+    return age;
+}
 
+const copyStudents = [...students]
+
+for (const student of copyStudents) {
+    student.FIO = student.lastName + ' ' + student.firstName + ' ' + student.middleName ;
+    student.well = 2024 - student.startYear;
+    student.year = student.startYear + '-' +  '2024' 
+    
+}
+
+function addStudentToTable() {
+    const tbody = document.querySelector('#studentTable tbody');
+    tbody.classList.add('stroke')
+
+    copyStudents.forEach(student => {
+
+        const age = calculateAge(student.Date) 
+        
     // Создаем ячейки <td>
     const nameCell = document.createElement('td');
-    nameCell.textContent = `${lastName} ${firstName} ${middleName}`;
+    nameCell.textContent = student.FIO;
 
     const facultyCell = document.createElement('td');
-    facultyCell.textContent = faculty;
-
+    facultyCell.textContent = student.faculty;
+    
     const birthDateCell = document.createElement('td');
-    birthDateCell.textContent = birthDate;
+    birthDateCell.textContent = student.Date + ' ' + '('  + age + 'лет' + ')';
 
     const startYearCell = document.createElement('td');
-    startYearCell.textContent = startYear;
-
+    startYearCell.textContent = student.year + ' ' + '(' + student.well + ' ' + 'курс' + ')';
+    
     const row = document.createElement('tr');
 
     // Добавляем ячейки в строку
@@ -116,31 +117,12 @@ function addStudentToTable(firstNameMock, lastNameMock, middleNameMock, birthDat
 
     // Добавляем строку в <tbody>
     tbody.appendChild(row);
-}
-
-// const validateStudents = (a,b,c,d...)
-//  [{ fullname error}, {faculti error}]
-
-// Функция для добавления студентов в таблицу
-function initialTableDataMock(students) {
-    // Очищаем таблицу перед добавлением новых данных (опционально)
-    tbody.innerHTML = '';
-    // Создаем строки таблицы для каждого студента
-    students.forEach((student) => {
-        const {
-            lastName,
-            firstName,
-            middleName,
-            faculty,
-            birthDate,
-            startYear,
-        } = student;
-
-        addStudentToTable(firstName, lastName, middleName, birthDate, startYear, faculty)
     });
 }
+    addStudentToTable()
 
 
-initialTableDataMock(students);
 
 
+    // const validateStudents = (a,b,c,d...)
+//  [{ fullname error}, {faculti error}]
