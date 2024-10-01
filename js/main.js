@@ -45,17 +45,10 @@ const students = [{
 ];
 const buttonAddStudent = document.getElementById('addStudentClass');
 
-
+// buttonAddStudent.addEventListener('click', onAddBtn);
 const addForm = document.getElementById('add-form');
 
 
-
-// const firstName = document.getElementById('firstName').value;
-//     const lastName = document.getElementById('lastName').value;
-//     const middleName = document.getElementById('middleName').value;
-//     const birthDate = document.getElementById('birthDate').value;
-//     const startYear = document.getElementById('startYear').value;
-//    const faculty = document.getElementById('faculty').value;
 
 function clearForm() {
     document.getElementById('firstName').value = '';
@@ -93,8 +86,68 @@ for (const student of copyStudents) {
 }
 
 
-    const tbody = document.querySelector('#studentTable tbody');
-    tbody.classList.add('stroke')
+const tbody = document.querySelector('#studentTable tbody');
+tbody.classList.add('stroke')
+
+copyStudents.forEach(student => {
+
+
+
+    // Создаем ячейки <td>
+    const nameCell = document.createElement('td');
+    nameCell.textContent = student.FIO;
+
+    const facultyCell = document.createElement('td');
+    facultyCell.textContent = student.faculty;
+
+    const birthDateCell = document.createElement('td');
+    birthDateCell.textContent = student.birthDate + ' ' + '(' + student.age + ' ' + 'лет' + ')';
+
+    const startYearCell = document.createElement('td');
+    startYearCell.textContent = student.year + ' ' + '(' + student.well + ' ' + 'курс' + ')';
+
+    const row = document.createElement('tr');
+
+    // Добавляем ячейки в строку
+    row.appendChild(nameCell);
+    row.appendChild(facultyCell);
+    row.appendChild(birthDateCell);
+    row.appendChild(startYearCell);
+
+    // Добавляем строку в <tbody>
+    tbody.appendChild(row);
+});
+
+
+
+
+addForm.addEventListener('submit', function (event) {
+    event.preventDefault()
+
+    students.push({
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        middleName: document.getElementById('middleName').value,
+        birthDate: document.getElementById('birthDate').value,
+        startYear: document.getElementById('startYear').value,
+        faculty: document.getElementById('faculty').value,
+
+
+    })
+console.log(students);
+    tbody.innerHTML = ''
+
+    const copyStudents = [...students]
+
+    for (const student of copyStudents) {
+        student.FIO = student.lastName + ' ' + student.firstName + ' ' + student.middleName;
+        student.well = 2024 - student.startYear;
+        student.year = student.startYear + '-' + '2024';
+        student.age = calculateAge(student.birthDate);
+ 
+    }
+
+
 
     copyStudents.forEach(student => {
 
@@ -125,63 +178,8 @@ for (const student of copyStudents) {
         tbody.appendChild(row);
     });
 
+    clearForm();
 
-
-
-addForm.addEventListener('submit', function (event) {
-    event.preventDefault()
-
-    students.push({
-        firstName: firstName.value,
-        lastName: lastName.value,
-        middleName: middleName.value,
-        birthDate: birthDate,  
-        startYear: startYear.value,
-        faculty: faculty.value
-    })
-
-   tbody.innerHTML = ''
-    const copyStudents = [...students]
-
-for (const student of copyStudents) {
-    student.FIO = student.lastName + ' ' + student.firstName + ' ' + student.middleName;
-    student.well = 2024 - student.startYear;
-    student.year = student.startYear + '-' + '2024';
-    student.age = calculateAge(student.birthDate)
-}
-
-    
-
-        copyStudents.forEach(student => {
-
-
-
-            // Создаем ячейки <td>
-            const nameCell = document.createElement('td');
-            nameCell.textContent = student.FIO;
-
-            const facultyCell = document.createElement('td');
-            facultyCell.textContent = student.faculty;
-
-            const birthDateCell = document.createElement('td');
-            birthDateCell.textContent = student.birthDate + ' ' + '(' + student.age + ' ' + 'лет' + ')';
-
-            const startYearCell = document.createElement('td');
-            startYearCell.textContent = student.year + ' ' + '(' + student.well + ' ' + 'курс' + ')';
-
-            const row = document.createElement('tr');
-
-            // Добавляем ячейки в строку
-            row.appendChild(nameCell);
-            row.appendChild(facultyCell);
-            row.appendChild(birthDateCell);
-            row.appendChild(startYearCell);
-
-            // Добавляем строку в <tbody>
-            tbody.appendChild(row);
-        });
-    
-    
 })
 
 
