@@ -77,64 +77,99 @@ function calculateAge(birthDate) {
     return age;
 }
 
+function createOneStudent(student) {
+    const nameCell = document.createElement('td');
+    nameCell.textContent = student.FIO;
+    const facultyCell = document.createElement('td');
+    facultyCell.textContent = student.faculty;
+    const birthDateCell = document.createElement('td');
+    birthDateCell.textContent = student.birthDate + ' ' + '(' + student.age + ' ' + 'лет' + ')';
+    const startYearCell = document.createElement('td');
+    startYearCell.textContent = student.year + ' ' + '(' + student.well + ' ' + 'курс' + ')';
+    const row = document.createElement('tr');
 
-function render() {
+    // Добавляем ячейки в строку
+    row.appendChild(nameCell);
+    row.appendChild(facultyCell);
+    row.appendChild(birthDateCell);
+    row.appendChild(startYearCell);
+
+    return (row)
+}
+
+function render(arrData) {
 
     tbody.innerHTML = '';
 
-    const copyStudents = [...students]
+    const copyStudents = [...arrData]
 
     for (const student of copyStudents) {
         student.FIO = student.lastName + ' ' + student.firstName + ' ' + student.middleName;
         student.well = 2024 - student.startYear;
         student.year = student.startYear + '-' + '2024'
         student.age = calculateAge(student.birthDate)
+
     }
-
-
 
     copyStudents.forEach(student => {
         // Создаем ячейки <td>
-        const nameCell = document.createElement('td');
-        nameCell.textContent = student.FIO;
-        const facultyCell = document.createElement('td');
-        facultyCell.textContent = student.faculty;
-        const birthDateCell = document.createElement('td');
-        birthDateCell.textContent = student.birthDate + ' ' + '(' + student.age + ' ' + 'лет' + ')';
-        const startYearCell = document.createElement('td');
-        startYearCell.textContent = student.year + ' ' + '(' + student.well + ' ' + 'курс' + ')';
-        const row = document.createElement('tr');
-
-        // Добавляем ячейки в строку
-        row.appendChild(nameCell);
-        row.appendChild(facultyCell);
-        row.appendChild(birthDateCell);
-        row.appendChild(startYearCell);
-
+        const newTr = createOneStudent(student)
         // Добавляем строку в <tbody>
-        tbody.appendChild(row);
+        tbody.appendChild(newTr);
     });
 
 }
 
-render()
+render(students)
 
 // Добавляем студента из формы в массив
 
 addForm.addEventListener('submit', function (event) {
     event.preventDefault()
 
+    if(firstName.value.trim() == '') {
+        alert('Имя не введено!')
+        return
+    }
+
+    if(lastName.value.trim() == '') {
+        alert('Фамилия не введена!')
+        return
+    }
+
+    if(middleName.value.trim() == '') {
+        alert('Отчество не введено!')
+        return
+    }
+
+    if(birthDate.value.trim() == '') {
+        alert('Дата рождения не введена!')
+        return
+    }
+
+    if(startYear.value.trim() == '') {
+        alert('Год начала обучения не введен!')
+        return
+    }
+
+    if(faculty.value.trim() == '') {
+        alert('Факультет не введен!')
+        return
+    }
+
+
     students.push({
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        middleName: document.getElementById('middleName').value,
-        birthDate: document.getElementById('birthDate').value,
-        startYear: document.getElementById('startYear').value,
-        faculty: document.getElementById('faculty').value,
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        middleName: document.getElementById('middleName').value.trim(),
+        birthDate: document.getElementById('birthDate').value.trim(),
+        startYear: document.getElementById('startYear').value.trim(),
+        faculty: document.getElementById('faculty').value.trim(),
     })
 
 
-    render()
+    render(students)
+
     clearForm();
 })
 
