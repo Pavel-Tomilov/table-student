@@ -127,13 +127,15 @@ render(students)
 addForm.addEventListener('submit', function (event) {
     event.preventDefault()
 
-    if(firstName.value.trim() == '') {
-        alert('Имя не введено!')
-        return
-    }
+// Валидация
 
     if(lastName.value.trim() == '') {
         alert('Фамилия не введена!')
+        return
+    }
+
+    if(firstName.value.trim() == '') {
+        alert('Имя не введено!')
         return
     }
 
@@ -176,3 +178,11 @@ addForm.addEventListener('submit', function (event) {
 
 // const validateStudents = (a,b,c,d...)
 //  [{ fullname error}, {faculti error}]
+
+function sortStudents(copyStudents, prop, dir = false) {
+    let result = copyStudents.sort(function(a,b) {
+        if(a[prop] < b[prop]) return -1
+    })
+    return result
+}
+FIO.addEventListener('click', sortStudents);
