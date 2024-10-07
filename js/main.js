@@ -179,10 +179,29 @@ addForm.addEventListener('submit', function (event) {
 // const validateStudents = (a,b,c,d...)
 //  [{ fullname error}, {faculti error}]
 
-function sortStudents(copyStudents, prop, dir = false) {
-    let result = copyStudents.sort(function(a,b) {
-        if(a[prop] < b[prop]) return -1
-    })
-    return result
+studentTable.onclick = function(e) {
+    if(e.target.tagName != 'TH') return
+    let th = e.target
+    sortTable(th.cellIndex, th.dataset.type)
 }
-FIO.addEventListener('click', sortStudents);
+
+function sortTable(colNum, type) {
+    let tbody = studentTable.querySelector('tbody')
+    let copyStudents =Array.from(tbody.rows)
+    let compare;
+    switch(type) {
+        case 'number':
+            compare = function(rowA, rowB) {
+                return rowA.cells[colNum].innerHTML - rowB.cells[colNum].innerHTML
+            }
+            break;
+            case 'string':
+                compare = function(rowA, rowB) {
+                    return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? 1 : -1
+    }
+    break;
+
+}
+copyStudents.sort(compare)
+tbody.append(...copyStudents)
+}
