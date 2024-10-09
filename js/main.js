@@ -1,47 +1,47 @@
 const students = [{
-        firstName: 'Олег',
-        lastName: 'Филимонов',
-        middleName: 'Александрович',
-        birthDate: '31.12.1985',
-        startYear: 2020,
-        faculty: 'Исторический'
-    },
+    firstName: 'Олег',
+    lastName: 'Филимонов',
+    middleName: 'Александрович',
+    birthDate: '31.12.1985',
+    startYear: 2020,
+    faculty: 'Исторический'
+},
 
-    {
-        firstName: 'Ирина',
-        lastName: 'Балуевская',
-        middleName: 'Алексеевна',
-        birthDate: '22.11.1987',
-        startYear: 2021,
-        faculty: 'Филологический'
-    },
+{
+    firstName: 'Ирина',
+    lastName: 'Балуевская',
+    middleName: 'Алексеевна',
+    birthDate: '22.11.1987',
+    startYear: 2021,
+    faculty: 'Филологический'
+},
 
-    {
-        firstName: 'Иван',
-        lastName: 'Туваев',
-        middleName: 'Николаевич',
-        birthDate: '23.09.1990',
-        startYear: 2022,
-        faculty: 'Энергетический'
-    },
+{
+    firstName: 'Иван',
+    lastName: 'Туваев',
+    middleName: 'Николаевич',
+    birthDate: '23.09.1990',
+    startYear: 2022,
+    faculty: 'Энергетический'
+},
 
-    {
-        firstName: 'Дмитрий',
-        lastName: 'Шин',
-        middleName: 'Валерьевич',
-        birthDate: '22.08.1987',
-        startYear: 2020,
-        faculty: 'Математический'
-    },
+{
+    firstName: 'Дмитрий',
+    lastName: 'Шин',
+    middleName: 'Валерьевич',
+    birthDate: '22.08.1987',
+    startYear: 2020,
+    faculty: 'Математический'
+},
 
-    {
-        firstName: 'Евгений',
-        lastName: 'Козлов',
-        middleName: 'Петрович',
-        birthDate: '30.07.1998',
-        startYear: 2023,
-        faculty: 'Исторический'
-    }
+{
+    firstName: 'Евгений',
+    lastName: 'Козлов',
+    middleName: 'Петрович',
+    birthDate: '30.07.1998',
+    startYear: 2023,
+    faculty: 'Исторический'
+}
 ];
 const buttonAddStudent = document.getElementById('addStudentClass');
 
@@ -101,7 +101,7 @@ function render(arrData) {
 
     tbody.innerHTML = '';
 
-    const copyStudents = [...arrData]
+    let copyStudents = [...arrData]
 
     for (const student of copyStudents) {
         student.FIO = student.lastName + ' ' + student.firstName + ' ' + student.middleName;
@@ -111,6 +111,25 @@ function render(arrData) {
 
     }
 
+    // Сортировка
+    studentTable.onclick = function(e) {
+        if(e.target.tagName != 'TH') return
+        let th = e.target
+        sortTable(th.cellIndex, th.dataset.type)
+    }
+
+    function sortStudents(copyStudents, prop, dir = false) {
+        let result = copyStudents.sort(function (a, b) {
+            if (a[prop] < b[prop]) return -1
+        })
+        return result
+        
+    }
+
+   sortStudents(copyStudents)
+
+
+   
     copyStudents.forEach(student => {
         // Создаем ячейки <td>
         const newTr = createOneStudent(student)
@@ -121,40 +140,39 @@ function render(arrData) {
 }
 
 render(students)
-
 // Добавляем студента из формы в массив
 
 addForm.addEventListener('submit', function (event) {
     event.preventDefault()
 
-// Валидация
+    // Валидация
 
-    if(lastName.value.trim() == '') {
+    if (lastName.value.trim() == '') {
         alert('Фамилия не введена!')
         return
     }
 
-    if(firstName.value.trim() == '') {
+    if (firstName.value.trim() == '') {
         alert('Имя не введено!')
         return
     }
 
-    if(middleName.value.trim() == '') {
+    if (middleName.value.trim() == '') {
         alert('Отчество не введено!')
         return
     }
 
-    if(birthDate.value.trim() == '') {
+    if (birthDate.value.trim() == '') {
         alert('Дата рождения не введена!')
         return
     }
 
-    if(startYear.value.trim() == '') {
+    if (startYear.value.trim() == '') {
         alert('Год начала обучения не введен!')
         return
     }
 
-    if(faculty.value.trim() == '') {
+    if (faculty.value.trim() == '') {
         alert('Факультет не введен!')
         return
     }
@@ -176,32 +194,4 @@ addForm.addEventListener('submit', function (event) {
 })
 
 
-// const validateStudents = (a,b,c,d...)
-//  [{ fullname error}, {faculti error}]
 
-studentTable.onclick = function(e) {
-    if(e.target.tagName != 'TH') return
-    let th = e.target
-    sortTable(th.cellIndex, th.dataset.type)
-}
-
-function sortTable(colNum, type) {
-    let tbody = studentTable.querySelector('tbody')
-    let copyStudents =Array.from(tbody.rows)
-    let compare;
-    switch(type) {
-        case 'number':
-            compare = function(rowA, rowB) {
-                return rowA.cells[colNum].innerHTML - rowB.cells[colNum].innerHTML
-            }
-            break;
-            case 'string':
-                compare = function(rowA, rowB) {
-                    return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? 1 : -1
-    }
-    break;
-
-}
-copyStudents.sort(compare)
-tbody.append(...copyStudents)
-}
