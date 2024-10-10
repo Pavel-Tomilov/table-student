@@ -194,4 +194,47 @@ addForm.addEventListener('submit', function (event) {
 })
 
 
+// const validateStudents = (a,b,c,d...)
+//  [{ fullname error}, {faculti error}]
 
+const headers = document.querySelectorAll('th[data-sort]');
+let sortDirection = 'asc';
+
+function sortStudents(key) {
+    students.sort((a, b) => {
+        const valueA = typeof a[key] === 'string' ? a[key].toLowerCase() : a[key];
+        const valueB = typeof b[key] === 'string' ? b[key].toLowerCase() : b[key];
+
+        if (sortDirection === 'asc') {
+            return valueA > valueB ? 1 : -1;
+        } else {
+            return valueA < valueB ? 1 : -1;
+        }
+    });
+}
+
+// Функция для обработки кликов на заголовки таблицы
+headers.forEach(header => {
+    header.addEventListener('click', () => {
+        const key = header.getAttribute('data-sort');
+
+        // Определение направления сортировки
+        if (header.classList.contains('asc')) {
+            sortDirection = 'desc';
+        } else {
+            sortDirection = 'asc';
+        }
+
+        // Удаляем классы сортировки со всех заголовков
+        headers.forEach(h => h.classList.remove('asc', 'desc'));
+
+        // Добавляем класс направления сортировки на текущий заголовок
+        header.classList.add(sortDirection);
+
+        // Сортировка студентов по выбранному ключу
+        sortStudents(key);
+
+        // Перерисовка таблицы после сортировки
+        render(students);
+    });
+});
