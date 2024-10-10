@@ -112,21 +112,6 @@ function render(arrData) {
     }
 
     // Сортировка
-    studentTable.onclick = function(e) {
-        if(e.target.tagName != 'TH') return
-        let th = e.target
-        sortTable(th.cellIndex, th.dataset.type)
-    }
-
-    function sortStudents(copyStudents, prop, dir = false) {
-        let result = copyStudents.sort(function (a, b) {
-            if (a[prop] < b[prop]) return -1
-        })
-        return result
-        
-    }
-
-   sortStudents(copyStudents)
 
 
    
