@@ -85,7 +85,7 @@ function createOneStudent(student) {
   const birthDateCell = document.createElement('td');
   birthDateCell.textContent = student.birthDate + ' ' + '(' + student.age + ' ' + 'лет' + ')';
   const startYearCell = document.createElement('td');
-  startYearCell.textContent = student.year + ' ' + '(' + student.well + ' ' + 'курс' + ')';
+  startYearCell.textContent = student.year + ' ' + '(' + student.status + ')';
   const row = document.createElement('tr');
 
   // Добавляем ячейки в строку
@@ -98,19 +98,27 @@ function createOneStudent(student) {
 }
 
 const filterForm = document.getElementById('filter-form');
-const lastNameFilterInp = document.getElementById('filter-lastName');
-const firstNameFilterInp = document.getElementById('filter-firstName');
-const middleNameFilterInp = document.getElementById('filter-middleName');
-const ageFilterInp = document.getElementById('filter-age');
-const wellFilterInp = document.getElementById('filter-well');
+const fioFilterInp = document.getElementById('filter-fio');
+const startYearFilterInp = document.getElementById('filter-startYear');
+const endYearFilterInp = document.getElementById('filter-endYear');
 const facultyFilterInp = document.getElementById('filter-faculty')
 
 // Функция фильтрации
 
 function filter(arr, prop, value) {
-  return arr.filter(function(student) {
-      if (student[prop].includes(value.trim())) return true
-  });
+  if (prop === 'startYear') {
+      // Фильтрация по году начала обучения
+      return arr.filter(student => student.startYear === parseInt(value.trim()));
+  } else if (prop === 'endYear') {
+      // Фильтрация по году окончания обучения
+      return arr.filter(student => student.endYear === parseInt(value.trim()));
+  } else if (prop === 'FIO') {
+      // Фильтрация по ФИО
+      return arr.filter(student => student.FIO.toLowerCase().includes(value.trim().toLowerCase()));
+  } else {
+      // Фильтрация по строковым значениям
+      return arr.filter(student => student[prop].toLowerCase().includes(value.trim().toLowerCase()));
+  }
 }
 
 function render(arrData) {
@@ -121,30 +129,33 @@ function render(arrData) {
 
   for (const student of copyStudents) {
       student.FIO = student.lastName + ' ' + student.firstName + ' ' + student.middleName;
-      student.well = 2024 - student.startYear;
-      student.year = student.startYear + '-' + '2024'
+      const currentYear = new Date().getFullYear();
+      student.well = currentYear - student.startYear + 1;
+      student.year = `${student.startYear} - ${student.startYear + 4}`;
+      student.endYear = student.startYear + 4 ;
       student.age = calculateAge(student.birthDate)
 
+      if (currentYear > student.endYear || (currentYear === student.endYear && new Date().getMonth() >= 8)) {
+        // Если год окончания прошёл или уже сентябрь текущего года
+        student.status = 'Закончил';
+    } else {
+        // Иначе показываем текущий курс
+        student.status = `${student.well} курс`;
+    }
+  } 
+
+
+  
+  if (fioFilterInp.value.trim() !== "") {
+      copyStudents = filter(copyStudents, 'FIO', fioFilterInp.value)
   }
 
-  if (lastNameFilterInp.value.trim() !== "") {
-      copyStudents = filter(copyStudents, 'lastName', lastNameFilterInp.value)
+  if (startYearFilterInp.value.trim() !== "") {
+      copyStudents = filter(copyStudents, 'startYear', startYearFilterInp.value)
   }
 
-  if (firstNameFilterInp.value.trim() !== "") {
-      copyStudents = filter(copyStudents, 'firstName', firstNameFilterInp.value)
-  }
-
-  if (middleNameFilterInp.value.trim() !== "") {
-      copyStudents = filter(copyStudents, 'middleName', middleNameFilterInp.value)
-  }
-
-  if (ageFilterInp.value.trim() !== "") {
-      copyStudents = filter(copyStudents, 'student.age', ageFilterInp.value)
-  }
-
-  if (wellFilterInp.value.trim() !== "") {
-      copyStudents = filter(copyStudents, '2024 - student.startYear', wellFilterInp.value)
+  if (endYearFilterInp.value.trim() !== "") {
+      copyStudents = filter(copyStudents, 'endYear', endYearFilterInp.value)
   }
 
   if (facultyFilterInp.value.trim() !== "") {
@@ -263,19 +274,13 @@ filterForm.addEventListener('submit', function(event) {
   event.preventDefault()
 })
 
-lastNameFilterInp.addEventListener('input', function() {
+fioFilterInp.addEventListener('input', function() {
   render(students)
 })
-firstNameFilterInp.addEventListener('input', function() {
+startYearFilterInp.addEventListener('input', function() {
   render(students)
 })
-middleNameFilterInp.addEventListener('input', function() {
-  render(students)
-})
-ageFilterInp.addEventListener('input', function() {
-  render(students)
-})
-wellFilterInp.addEventListener('input', function() {
+endYearFilterInp.addEventListener('input', function() {
   render(students)
 })
 facultyFilterInp.addEventListener('input', function() {
@@ -284,7 +289,7 @@ facultyFilterInp.addEventListener('input', function() {
 
 const resetButton = document.getElementById('btnFilter');
 resetButton.addEventListener('click', () => {
-  filterForm.reset(); // Сбрасывает все поля формы до их начального состояния
+  filterForm.reset(); 
   render(students)
 });
 
