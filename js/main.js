@@ -282,6 +282,10 @@ facultyFilterInp.addEventListener('input', function() {
   render(students)
 })
 
-buttonFilter.addEventListener('click', function() {
-  filterForm(remove)
+const resetButton = document.getElementById('btnFilter');
+resetButton.addEventListener('click', () => {
+  filterForm.reset(); // Сбрасывает все поля формы до их начального состояния
+  render(students)
 });
+
+
