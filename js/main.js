@@ -136,16 +136,14 @@ function render(arrData) {
       student.age = calculateAge(student.birthDate)
 
       if (currentYear > student.endYear || (currentYear === student.endYear && new Date().getMonth() >= 8)) {
-        // Если год окончания прошёл или уже сентябрь текущего года
+        
         student.status = 'Закончил';
     } else {
-        // Иначе показываем текущий курс
+        
         student.status = `${student.well} курс`;
     }
   } 
 
-
-  
   if (fioFilterInp.value.trim() !== "") {
       copyStudents = filter(copyStudents, 'FIO', fioFilterInp.value)
   }
@@ -173,6 +171,21 @@ function render(arrData) {
 
 render(students)
 // Добавляем студента из формы в массив
+const errorMessage = document.getElementById('error-message');
+
+function isValidBirthDate(birthDate) {
+  const minDate = new Date('1900-01-01');
+  const currentDate = new Date();
+  
+
+  return birthDate >= minDate && birthDate <= currentDate;
+}
+
+// Функция для валидации года начала обучения
+function isValidStartYear(startYear) {
+  return startYear >= 2000 && startYear <= currentYear;
+}
+
 
 addForm.addEventListener('submit', function (event) {
   event.preventDefault()
@@ -209,6 +222,21 @@ addForm.addEventListener('submit', function (event) {
       return
   }
 
+  if (!isValidBirthDate(birthDate)) {
+    errorMessage.style.display = 'block';
+    errorMessage.textContent = 'Дата рождения должна быть в диапазоне от 01.01.1900 до текущей даты.';
+    return;
+}
+
+// Валидация года начала обучения
+if (!isValidStartYear(startYear)) {
+    errorMessage.style.display = 'block';
+    errorMessage.textContent = `Год начала обучения должен быть в диапазоне от 2000 до ${currentYear}.`;
+    return;
+}
+
+// Если все проверки пройдены, добавляем студента
+errorMessage.style.display = 'none'; // Скрываем ошибку, если всё ок
 
   students.push({
       firstName: document.getElementById('firstName').value.trim(),
