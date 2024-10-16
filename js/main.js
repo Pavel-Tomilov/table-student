@@ -142,6 +142,7 @@ function render(arrData) {
         
         student.status = `${student.well} курс`;
     }
+    
   } 
 
   if (fioFilterInp.value.trim() !== "") {
@@ -170,107 +171,89 @@ function render(arrData) {
 }
 
 render(students)
+
+// Изменение регистра первых букв
+function capitalize(text) {
+  return text.replace(/\b[а-яё]/gi, char => char.toUpperCase());
+}
+
+// Обработчик для изменения текста в полях формы
+document.getElementById('add-form').addEventListener('input', function (event) {
+  const target = event.target;
+
+  // Применяем только к текстовым полям (Имя, Фамилия, Отчество, Факультет)
+  if (target.tagName === 'INPUT' && target.type === 'text') {
+      target.value = capitalize(target.value);
+  }
+});
+
 // Добавляем студента из формы в массив
-const errorMessage = document.getElementById('error-message');
-let error = '';
-// function isValidBirthDate(birthDate) {
-//   const minDate = new Date('01.01.1900');
-//   const currentDate = new Date();
-  
-
-//   return birthDate >= minDate && birthDate <= currentDate;
-// }
-
-// // Функция для валидации года начала обучения
-// function isValidStartYear(startYear) {
-//   return startYear >= 2000 && startYear <= currentYear;
-// }
-
 
 addForm.addEventListener('submit', function (event) {
-  event.preventDefault()
+  event.preventDefault();
 
-  
-  // Валидация
+  const today = new Date();
+  const currentYear = today.getFullYear();
 
-  if (lastName.value.trim() == '') {
-      alert('Фамилия не введена!')
-      return
+  // Валидация фамилии
+  if (lastName.value.trim() === '') {
+    alert('Фамилия не введена!');
+    return;
   }
 
-  if (firstName.value.trim() == '') {
-      alert('Имя не введено!')
-      return
+  // Валидация имени
+  if (firstName.value.trim() === '') {
+    alert('Имя не введено!');
+    return;
   }
 
-  if (middleName.value.trim() == '') {
-      alert('Отчество не введено!')
-      return
+  // Валидация отчества
+  if (middleName.value.trim() === '') {
+    alert('Отчество не введено!');
+    return;
   }
 
-  if (birthDate.value.trim() == '') {
-      alert('Дата рождения не введена!')
-      return
+  // Валидация даты рождения
+  const birthDateValue = birthDate.value.trim();
+  if (birthDateValue === '') {
+    alert('Дата рождения не введена!');
+    return;
   }
 
-  if (startYear.value.trim() == '') {
-      alert('Год начала обучения не введен!')
-      return
-  }
-
-  if (faculty.value.trim() == '') {
-      alert('Факультет не введен!')
-      return
-  }
-
+  const birthDateParsed = new Date(birthDateValue);
   const minBirthDate = new Date('1900-01-01');
-  const currentDate = new Date();
-  const enteredBirthDate = new Date(birthDate);
-  
-  if (enteredBirthDate < minBirthDate || enteredBirthDate > currentDate) {
-    error = 'Дата рождения должна быть в диапазоне от 01.01.1900 до текущей даты.';
+
+  if (birthDateParsed < minBirthDate || birthDateParsed > today) {
+    alert('Дата рождения должна быть в диапазоне от 01.01.1900 до текущей даты!');
+    return;
   }
 
-  // Проверка года начала обучения
-  const startYearInt = parseInt(startYear, 10);
-  const currentYear = currentDate.getFullYear();
-
-  if (startYearInt < 2000 || startYearInt > currentYear) {
-    error = 'Год начала обучения должен быть в диапазоне от 2000 до текущего года.';
+  // Валидация года начала обучения
+  const startYearValue = parseInt(startYear.value.trim(), 10);
+  if (isNaN(startYearValue) || startYearValue < 2000 || startYearValue > currentYear) {
+    alert(`Год начала обучения должен быть в диапазоне от 2000 до ${currentYear}!`);
+    return;
   }
 
-//   if (!isValidBirthDate(birthDate)) {
-//     errorMessage.style.display = 'block';
-//     errorMessage.textContent = 'Дата рождения должна быть в диапазоне от 01.01.1900 до текущей даты.';
-//     return;
-// }
+  // Валидация факультета
+  if (faculty.value.trim() === '') {
+    alert('Факультет не введен!');
+    return;
+  }
 
-// // Валидация года начала обучения
-// if (!isValidStartYear(startYear)) {
-//     errorMessage.style.display = 'block';
-//     errorMessage.textContent = `Год начала обучения должен быть в диапазоне от 2000 до ${currentYear}.`;
-//     return;
-// }
-
-// Если все проверки пройдены, добавляем студента
-errorMessage.style.display = 'none'; // Скрываем ошибку, если всё ок
-
+  // Добавление студента после валидации
   students.push({
-      firstName: document.getElementById('firstName').value.trim(),
-      lastName: document.getElementById('lastName').value.trim(),
-      middleName: document.getElementById('middleName').value.trim(),
-      birthDate: document.getElementById('birthDate').value.trim(),
-      startYear: document.getElementById('startYear').value.trim(),
-      faculty: document.getElementById('faculty').value.trim(),
-  })
+    firstName: document.getElementById('firstName').value.trim(),
+    lastName: document.getElementById('lastName').value.trim(),
+    middleName: document.getElementById('middleName').value.trim(),
+    birthDate: document.getElementById('birthDate').value.trim(),
+    startYear: document.getElementById('startYear').value.trim(),
+    faculty: document.getElementById('faculty').value.trim(),
+  });
 
-
-  render(students)
-
+  render(students);
   clearForm();
-})
-
-
+});
 
 const headers = document.querySelectorAll('th[data-sort]');
 let sortDirection = 'asc';
