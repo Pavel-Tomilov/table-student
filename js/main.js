@@ -173,23 +173,25 @@ render(students)
 // Добавляем студента из формы в массив
 const errorMessage = document.getElementById('error-message');
 
-function isValidBirthDate(birthDate) {
-  const minDate = new Date('1900-01-01');
-  const currentDate = new Date();
-  
 
-  return birthDate >= minDate && birthDate <= currentDate;
-}
-
-// Функция для валидации года начала обучения
-function isValidStartYear(startYear) {
-  return startYear >= 2000 && startYear <= currentYear;
-}
 
 
 addForm.addEventListener('submit', function (event) {
   event.preventDefault()
 
+  function isValidBirthDate(birthDate) {
+    const minDate = new Date('01.01.1900');
+    const currentDate = new Date();
+    
+  
+    return birthDate >= minDate && birthDate <= currentDate;
+  }
+  
+  // Функция для валидации года начала обучения
+  function isValidStartYear(startYear) {
+    return startYear >= 2000 && startYear <= currentYear;
+  } 
+  
   // Валидация
 
   if (lastName.value.trim() == '') {
