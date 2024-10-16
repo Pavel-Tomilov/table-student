@@ -172,25 +172,24 @@ function render(arrData) {
 render(students)
 // Добавляем студента из формы в массив
 const errorMessage = document.getElementById('error-message');
+let error = '';
+// function isValidBirthDate(birthDate) {
+//   const minDate = new Date('01.01.1900');
+//   const currentDate = new Date();
+  
 
+//   return birthDate >= minDate && birthDate <= currentDate;
+// }
 
+// // Функция для валидации года начала обучения
+// function isValidStartYear(startYear) {
+//   return startYear >= 2000 && startYear <= currentYear;
+// }
 
 
 addForm.addEventListener('submit', function (event) {
   event.preventDefault()
 
-  function isValidBirthDate(birthDate) {
-    const minDate = new Date('01.01.1900');
-    const currentDate = new Date();
-    
-  
-    return birthDate >= minDate && birthDate <= currentDate;
-  }
-  
-  // Функция для валидации года начала обучения
-  function isValidStartYear(startYear) {
-    return startYear >= 2000 && startYear <= currentYear;
-  } 
   
   // Валидация
 
@@ -224,18 +223,34 @@ addForm.addEventListener('submit', function (event) {
       return
   }
 
-  if (!isValidBirthDate(birthDate)) {
-    errorMessage.style.display = 'block';
-    errorMessage.textContent = 'Дата рождения должна быть в диапазоне от 01.01.1900 до текущей даты.';
-    return;
-}
+  const minBirthDate = new Date('1900-01-01');
+  const currentDate = new Date();
+  const enteredBirthDate = new Date(birthDate);
+  
+  if (enteredBirthDate < minBirthDate || enteredBirthDate > currentDate) {
+    error = 'Дата рождения должна быть в диапазоне от 01.01.1900 до текущей даты.';
+  }
 
-// Валидация года начала обучения
-if (!isValidStartYear(startYear)) {
-    errorMessage.style.display = 'block';
-    errorMessage.textContent = `Год начала обучения должен быть в диапазоне от 2000 до ${currentYear}.`;
-    return;
-}
+  // Проверка года начала обучения
+  const startYearInt = parseInt(startYear, 10);
+  const currentYear = currentDate.getFullYear();
+
+  if (startYearInt < 2000 || startYearInt > currentYear) {
+    error = 'Год начала обучения должен быть в диапазоне от 2000 до текущего года.';
+  }
+
+//   if (!isValidBirthDate(birthDate)) {
+//     errorMessage.style.display = 'block';
+//     errorMessage.textContent = 'Дата рождения должна быть в диапазоне от 01.01.1900 до текущей даты.';
+//     return;
+// }
+
+// // Валидация года начала обучения
+// if (!isValidStartYear(startYear)) {
+//     errorMessage.style.display = 'block';
+//     errorMessage.textContent = `Год начала обучения должен быть в диапазоне от 2000 до ${currentYear}.`;
+//     return;
+// }
 
 // Если все проверки пройдены, добавляем студента
 errorMessage.style.display = 'none'; // Скрываем ошибку, если всё ок
