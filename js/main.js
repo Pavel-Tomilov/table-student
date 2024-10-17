@@ -43,9 +43,9 @@ const students = [{
   faculty: 'Исторический'
 }
 ];
-const buttonAddStudent = document.getElementById('addStudentClass');
 
-// buttonAddStudent.addEventListener('click', onAddBtn);
+
+
 const addForm = document.getElementById('add-form');
 const tbody = document.querySelector('#studentTable tbody');
 tbody.classList.add('stroke')
@@ -76,6 +76,9 @@ function calculateAge(birthDate) {
 
   return age;
 }
+
+
+
 
 function createOneStudent(student) {
   const nameCell = document.createElement('td');
@@ -127,6 +130,7 @@ function render(arrData) {
 
   let copyStudents = [...arrData]
 
+
   for (const student of copyStudents) {
       student.FIO = student.lastName + ' ' + student.firstName + ' ' + student.middleName;
       const currentYear = new Date().getFullYear();
@@ -172,37 +176,24 @@ function render(arrData) {
 
 render(students)
 
-// Изменение регистра первых букв
-function capitalize(text) {
-  return text.replace(/\b[а-яё]/gi, char => char.toUpperCase());
-}
-
-// Обработчик для изменения текста в полях формы
-document.getElementById('add-form').addEventListener('input', function (event) {
-  const target = event.target;
-
-  // Применяем только к текстовым полям (Имя, Фамилия, Отчество, Факультет)
-  if (target.tagName === 'INPUT' && target.type === 'text') {
-      target.value = capitalize(target.value);
-  }
-});
-
 // Добавляем студента из формы в массив
 
 addForm.addEventListener('submit', function (event) {
   event.preventDefault();
 
-  const today = new Date();
-  const currentYear = today.getFullYear();
+
 
   // Валидация фамилии
-  if (lastName.value.trim() === '') {
+ const lastName = document.getElementById('lastName').value.trim().replace(/\s+/g, ' ');
+  if (lastName === '') {
     alert('Фамилия не введена!');
     return;
   }
 
+
   // Валидация имени
-  if (firstName.value.trim() === '') {
+   const firstName = document.getElementById('firstName').value.trim().replace(/\s+/g, ' ');
+  if (firstName === '') {
     alert('Имя не введено!');
     return;
   }
@@ -213,25 +204,19 @@ addForm.addEventListener('submit', function (event) {
     return;
   }
 
-  // Валидация даты рождения
-  const birthDateValue = birthDate.value.trim();
-  if (birthDateValue === '') {
-    alert('Дата рождения не введена!');
-    return;
-  }
-
-  const birthDateParsed = new Date(birthDateValue);
-  const minBirthDate = new Date('1900-01-01');
-
-  if (birthDateParsed < minBirthDate || birthDateParsed > today) {
+  const birthDateValue = document.getElementById('birthDate').value;
+  const [day, month, year] = birthDateValue.split('.');
+  const birthDateParsed = new Date(`${year}-${month}-${day}`);
+  
+  if (isNaN(birthDateParsed.getTime()) || birthDateParsed < new Date('1900-01-01') || birthDateParsed > new Date()) {
     alert('Дата рождения должна быть в диапазоне от 01.01.1900 до текущей даты!');
     return;
   }
 
   // Валидация года начала обучения
-  const startYearValue = parseInt(startYear.value.trim(), 10);
-  if (isNaN(startYearValue) || startYearValue < 2000 || startYearValue > currentYear) {
-    alert(`Год начала обучения должен быть в диапазоне от 2000 до ${currentYear}!`);
+  const startYearValue = parseInt(document.getElementById('startYear').value.trim(), 10);
+  if (isNaN(startYearValue) || startYearValue < 2000 || startYearValue > new Date().getFullYear()) {
+    alert(`Год начала обучения должен быть в диапазоне от 2000 до ${new Date().getFullYear()}!`);
     return;
   }
 
@@ -243,17 +228,19 @@ addForm.addEventListener('submit', function (event) {
 
   // Добавление студента после валидации
   students.push({
-    firstName: document.getElementById('firstName').value.trim(),
-    lastName: document.getElementById('lastName').value.trim(),
+    firstName,
+    lastName,
     middleName: document.getElementById('middleName').value.trim(),
-    birthDate: document.getElementById('birthDate').value.trim(),
-    startYear: document.getElementById('startYear').value.trim(),
+    birthDate: birthDateValue,
+    startYear: startYearValue,
     faculty: document.getElementById('faculty').value.trim(),
   });
 
   render(students);
   clearForm();
 });
+
+
 
 const headers = document.querySelectorAll('th[data-sort]');
 let sortDirection = 'asc';
