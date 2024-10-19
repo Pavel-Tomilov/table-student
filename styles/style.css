@@ -71,3 +71,7 @@ body {
   display: none;
   outline: 1px solid red;
 }
+
+.fasdf {
+  text-transform: capitalize;
+}
